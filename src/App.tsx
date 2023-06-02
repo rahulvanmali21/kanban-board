@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { ThemeProvider } from 'styled-components';
+import Board from './components/board';
+
+const theme = {
+  primary: "#b3d9ff",
+  secondary: "#c8c9cc",
+  info: "#a6d7e8",
+  warning: "#ffe09e",
+  error: "#f18a9b",
+
+}
+
+
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Board/>
+    </ThemeProvider>
   );
 }
 
