@@ -9,11 +9,15 @@ type Item = {
 
 type Props = {
   item:Item;
+  onDragStart:(e:React.DragEvent)=>void,
+  onDragEnd:(e:React.DragEvent)=>void,
+  onDragEnter:(e:React.DragEvent)=>void,
+  
 }
 
-const BoardItem = ({item}: Props) => {
+const BoardItem = ({item,onDragStart,onDragEnd,onDragEnter}: Props) => {
   return (
-    <Wrapper draggable="true">
+    <Wrapper draggable="true" onDragStart={onDragStart} onDragEnd={onDragEnd} onDragEnter={onDragEnter}>
       <h4>{item.title}</h4>
       <p>{item.priority}</p>
     </Wrapper>
