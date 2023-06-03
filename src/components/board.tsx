@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import BoardLane from "./board-lane";
 
@@ -32,34 +32,58 @@ const ITEMS = [
   },
 ];
 
+const DATA = {
+	"progress": [
+		{
+			"title": "Fix Datatable",
+			"priority": "high",
+			"lane": "progress"
+		},
+		{
+			"title": "add charts to dashboard",
+			"priority": "high",
+			"lane": "progress"
+		}
+	],
+	"todo": [
+		{
+			"title": "redesign login page",
+			"priority": "low",
+			"lane": "todo"
+		}
+	],
+	"review": [
+		{
+			"title": "send invitation adter registration",
+			"priority": "medium",
+			"lane": "review"
+		}
+	],
+	"prod": [
+		{
+			"title": "setup landing page",
+			"priority": "medium",
+			"lane": "prod"
+		}
+	]
+}
+
 const Board = (props: Props) => {
-  const lanesItems = useMemo(() => {
-    const data = new Map<string, Array<any>>();
-    const lanes = new Set<string>();
-    ITEMS.forEach((item) => {
-      lanes.add(item.lane);
-      if (!data.has(item.lane)) {
-        data.set(item.lane, [item]);
-      } else {
-        const items = data.get(item.lane);
-        if (items) {
-          items?.push(item);
-          data.set(item.lane, items);
-        }
-      }
-    });
-    return {
-      items: data,
-      lanes: Array.from(lanes),
-    };
-  }, []);
+     const [data, setData] = useState<any>(DATA)
+
+
+
+  const lanes = useMemo(() => {
+    return Object.keys(data)
+  }, [data]);
   return (
     <Wrapper>
-      {lanesItems.lanes.map((lane) => (
+      {lanes.map((lane:string) => (
         <BoardLane
+          onItemHover={()=>{}}
           key={lane}
           title={lane}
-          items={lanesItems.items.get(lane) ?? []}
+          items={data[lane] ?? []}
         />
       ))}
     </Wrapper>
