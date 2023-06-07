@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import BoardItem from "./board-item";
 
@@ -9,20 +9,25 @@ type Props = {
 };
 
 const BoardLane = ({ title, items ,onItemHover }: Props) => {
+  const dragIndex = useRef<number>()
   const onDragStart = (e: React.DragEvent, index: number) => {
-    console.log("started", index);
+    dragIndex.current = index;
   };
 
   const onDragEnd = (e: React.DragEvent) => {
     console.log("end");
   };
 
-  const onDragEnter = (e: React.DragEvent, index: number) => {
+  const onDragEnter = (e: React.DragEvent, index?: number) => {
     console.log("enter", index,title);
   };
 
+
+
   return (
-    <Wrapper>
+    <Wrapper 
+    onDragEnter={(e)=>onDragEnter(e)}
+    >
       <LaneHeader>
         <Title>{title}</Title>
       </LaneHeader>

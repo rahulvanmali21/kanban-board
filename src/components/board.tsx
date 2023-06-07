@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import BoardLane from "./board-lane";
-
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd'
 type Props = {};
 
 const ITEMS = [
@@ -77,6 +78,7 @@ const Board = (props: Props) => {
     return Object.keys(data)
   }, [data]);
   return (
+    <DndProvider backend={HTML5Backend}>
     <Wrapper>
       {lanes.map((lane:string) => (
         <BoardLane
@@ -87,6 +89,7 @@ const Board = (props: Props) => {
         />
       ))}
     </Wrapper>
+    </DndProvider>
   );
 };
 
