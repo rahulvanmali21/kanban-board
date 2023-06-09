@@ -6,28 +6,20 @@ import { DropTargetMonitor, useDrop } from "react-dnd";
 type Props = {
   title: string;
   items: any[];
-  onItemHover: (e: any) => void;
 };
 
-const BoardLane = ({ title, items, onItemHover }: Props) => {
-  const [{ isOver }, dropRef] = useDrop({
-    accept: "column",
-    hover: (draggedItem: any, monitor: DropTargetMonitor) => {},
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-      didDrop: monitor.didDrop(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
+const BoardLane = ({ title, items }: Props) => {
+ 
+
 
   return (
     <Wrapper>
       <LaneHeader>
         <Title>{title}</Title>
       </LaneHeader>
-      <BoardItemList ref={dropRef}>
+      <BoardItemList>
         {items.length > 0 ? (
-          items.map((item, index) => <BoardItem item={item} key={index} />)
+          items.map((item, index) => <BoardItem index={index} item={item} key={index} />)
         ) : (
           <p>no items</p>
         )}

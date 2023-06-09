@@ -82,7 +82,6 @@ const Board = (props: Props) => {
     <Wrapper>
       {lanes.map((lane:string) => (
         <BoardLane
-          onItemHover={()=>{}}
           key={lane}
           title={lane}
           items={data[lane] ?? []}
