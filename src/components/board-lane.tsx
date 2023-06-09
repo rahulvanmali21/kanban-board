@@ -1,47 +1,33 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 import BoardItem from "./board-item";
+import { DropTargetMonitor, useDrop } from "react-dnd";
 
 type Props = {
   title: string;
   items: any[];
-  onItemHover:(e:any)=>void
+  onItemHover: (e: any) => void;
 };
 
-const BoardLane = ({ title, items ,onItemHover }: Props) => {
-  const dragIndex = useRef<number>()
-  const onDragStart = (e: React.DragEvent, index: number) => {
-    dragIndex.current = index;
-  };
-
-  const onDragEnd = (e: React.DragEvent) => {
-    console.log("end");
-  };
-
-  const onDragEnter = (e: React.DragEvent, index?: number) => {
-    console.log("enter", index,title);
-  };
-
-
+const BoardLane = ({ title, items, onItemHover }: Props) => {
+  const [{ isOver }, dropRef] = useDrop({
+    accept: "column",
+    hover: (draggedItem: any, monitor: DropTargetMonitor) => {},
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+      didDrop: monitor.didDrop(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
 
   return (
-    <Wrapper 
-    onDragEnter={(e)=>onDragEnter(e)}
-    >
+    <Wrapper>
       <LaneHeader>
         <Title>{title}</Title>
       </LaneHeader>
-      <BoardItemList>
+      <BoardItemList ref={dropRef}>
         {items.length > 0 ? (
-          items.map((item, index) => (
-            <BoardItem
-              item={item}
-              key={index}
-              onDragStart={(e) => onDragStart(e, index)}
-              onDragEnter={(e)=>onDragEnter(e,index)}
-              onDragEnd={onDragEnd}
-            />
-          ))
+          items.map((item, index) => <BoardItem item={item} key={index} />)
         ) : (
           <p>no items</p>
         )}
