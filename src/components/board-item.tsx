@@ -25,7 +25,7 @@ const BoardItem = ({ item,index }: Props) => {
   );
 
   const [{ isOver }, dropRef] = useDrop({
-    accept: "column",
+    accept: "ITEM",
     hover: (draggedItem: any, monitor: DropTargetMonitor) => {
       if(!ref.current){
         return;
@@ -46,7 +46,7 @@ const BoardItem = ({ item,index }: Props) => {
 
       if(dragIndex > hoverIndex && hoverClientY < hoverRectMidY) return;
 
-      // moveItem(dragIndex,hoverIndex)
+      console.log(dragIndex,hoverIndex)
       draggedItem.index = hoverIndex
     },
     collect: (monitor) => ({
@@ -61,6 +61,7 @@ const BoardItem = ({ item,index }: Props) => {
   return (
     <Wrapper
       ref={ref}
+      isDragging={isDragging}
     >
       <h4>{item.title}</h4>
       <p>{item.priority}</p>
@@ -70,9 +71,14 @@ const BoardItem = ({ item,index }: Props) => {
 
 export default BoardItem;
 
-const Wrapper = styled.div`
+type WProps ={
+  isDragging:boolean
+}
+
+const Wrapper = styled.div<WProps>`
   max-width: 100%;
   border: 1px solid grey;
   padding: 1rem;
   background: #fefefe;
+  opacity:${props=>props.isDragging ? "0" :"1"}
 `;

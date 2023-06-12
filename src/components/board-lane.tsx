@@ -9,7 +9,20 @@ type Props = {
 };
 
 const BoardLane = ({ title, items }: Props) => {
- 
+  const [{isOver},drop] =useDrop({
+    accept:"ITEM",
+    canDrop:(item:any)=>{
+      const itemIndex = items.findIndex(s=>s.status===item.status);
+      const statusIndex = items.findIndex(s=>s.status ===1);
+      return [itemIndex + 1,itemIndex-1,itemIndex].includes(statusIndex);
+    },
+    drop:(item,monitor:DropTargetMonitor)=>{
+      console.log(item)
+    },
+    collect:(monitor:DropTargetMonitor)=>({
+      isOver:monitor.isOver()
+    })
+  })
 
 
   return (
@@ -17,7 +30,7 @@ const BoardLane = ({ title, items }: Props) => {
       <LaneHeader>
         <Title>{title}</Title>
       </LaneHeader>
-      <BoardItemList>
+      <BoardItemList ref={drop}>
         {items.length > 0 ? (
           items.map((item, index) => <BoardItem index={index} item={item} key={index} />)
         ) : (
