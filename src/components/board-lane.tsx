@@ -2,37 +2,47 @@ import React, { useRef } from "react";
 import styled from "styled-components";
 import BoardItem from "./board-item";
 import { DropTargetMonitor, useDrop } from "react-dnd";
+import { STATUSES  } from "../data";
 
 type Props = {
-  title: string;
+  data: any;
   items: any[];
+  onDrop:(item:any,status:string)=>void
+  onMove:(dragIndex:number,hoverIndex:number)=>void
 };
 
-const BoardLane = ({ title, items }: Props) => {
-  const [{isOver},drop] =useDrop({
-    accept:"ITEM",
-    canDrop:(item:any)=>{
-      const itemIndex = items.findIndex(s=>s.status===item.status);
-      const statusIndex = items.findIndex(s=>s.status ===1);
-      return [itemIndex + 1,itemIndex-1,itemIndex].includes(statusIndex);
+const BoardLane = ({ data, items,onMove,onDrop }: Props) => {
+  const [{ isOver }, dropRef] = useDrop({
+    accept: "ITEM",
+    canDrop: (item: any) => {
+      const itemIndex = STATUSES.findIndex(si=>si.status === item.status);
+      const statusIndex = STATUSES.findIndex(si=>si.status === data.status)
+      return [itemIndex + 1 , itemIndex -1 ,itemIndex].includes(statusIndex);
     },
-    drop:(item,monitor:DropTargetMonitor)=>{
-      console.log(item)
+    drop: (item, monitor: DropTargetMonitor) => {
+      onDrop(item,data.status);
     },
-    collect:(monitor:DropTargetMonitor)=>({
-      isOver:monitor.isOver()
-    })
-  })
-
+    collect: (monitor: DropTargetMonitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  });
 
   return (
-    <Wrapper>
+    <Wrapper isOver={isOver}>
       <LaneHeader>
-        <Title>{title}</Title>
+        <Title>{data.status}</Title>
       </LaneHeader>
-      <BoardItemList ref={drop}>
+      <BoardItemList ref={dropRef}>
         {items.length > 0 ? (
-          items.map((item, index) => <BoardItem index={index} item={item} key={index} />)
+          items.map((item) => (
+            <BoardItem
+              onMove={onMove}
+              color={data.color}
+              index={item.index}
+              item={item}
+              key={item.index}
+            />
+          ))
         ) : (
           <p>no items</p>
         )}
@@ -43,9 +53,12 @@ const BoardLane = ({ title, items }: Props) => {
 
 export default BoardLane;
 
-const Wrapper = styled.div`
+type WrapperProps = {
+  isOver: boolean;
+};
+const Wrapper = styled.div<WrapperProps>`
   width: 300px;
-  background: #efefef;
+  background: ${(props) => (props.isOver ? "#dfdfdf" : "#ffffff")};
   padding: 10px 20px;
   border: 1px solid grey;
   display: flex;
@@ -63,7 +76,7 @@ const LaneHeader = styled.div`
 `;
 
 const BoardItemList = styled.div`
-  height: inherit;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
